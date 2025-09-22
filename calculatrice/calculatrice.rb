@@ -26,5 +26,4 @@ puts "#{nombre1} / #{nombre2} = #{division}"
 puts ""
 puts "Merci d'avoir utilisé la calculatrice !"
 
-puts'
 

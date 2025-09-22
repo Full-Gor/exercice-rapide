@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modèles Ruby</title>
+    <style>
+        body{font-family:Arial;margin:20px;background:#f5f5f5}
+        .container{max-width:800px;margin:0 auto;background:white;padding:20px;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        h1{color:#e74c3c;text-align:center;margin-bottom:30px}
+        .model{background:#2d3748;color:#e2e8f0;padding:15px;margin:15px 0;border-radius:5px;font-family:monospace;font-size:14px;overflow-x:auto}
+        .comment{color:#68d391}
+        .keyword{color:#f687b3}
+        .string{color:#fbb6ce}
+        .number{color:#fbd38d}
+        .run{background:#28a745;color:white;border:none;padding:8px 15px;border-radius:4px;cursor:pointer;margin:10px 0}
+        .output{background:#000;color:#00ff00;padding:10px;border-radius:4px;margin:10px 0;font-family:monospace;display:none}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💎 Modèles Ruby</h1>
+        
+        <h2>👤 User (Compte utilisateur)</h2>
+        <div class="model">
+<span class="comment"># Créer une classe User = créer un modèle de compte utilisateur</span>
+<span class="keyword">class</span> User
+  <span class="comment"># attr_accessor = créer automatiquement les champs : nom, email, âge</span>
+  attr_accessor :name, :email, :age
+  
+  <span class="comment"># initialize = constructeur = ce qui se passe quand on crée un utilisateur</span>
+  <span class="keyword">def</span> initialize(name, email, age)
+    @name = name      <span class="comment"># @name = variable privée de l'objet</span>
+    @email = email    <span class="comment"># @email = variable privée de l'objet</span>
+    @age = age        <span class="comment"># @age = variable privée de l'objet</span>
+  <span class="keyword">end</span>
+  
+  <span class="comment"># adult? = méthode qui retourne true/false (le ? indique une question)</span>
+  <span class="keyword">def</span> adult?
+    @age >= <span class="number">18</span>  <span class="comment"># Si l'âge >= 18, retourne true</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># UTILISATION :</span>
+<span class="comment"># user = User.new("Alice", "alice@email.com", 25)</span>
+<span class="comment"># puts user.name     # Affiche "Alice"</span>
+<span class="comment"># puts user.adult?   # Affiche true</span>
+        </div>
+        <button class="run" onclick="runUser()">Tester User</button>
+        <div id="userOutput" class="output"></div>
+
+        <h2>📁 Category (Catégorie du site)</h2>
+        <div class="model">
+<span class="comment"># Créer une classe Category = créer un modèle de catégorie (comme "Électronique", "Mode")</span>
+<span class="keyword">class</span> Category
+  <span class="comment"># attr_accessor = créer automatiquement les champs : nom, description</span>
+  attr_accessor :name, :description
+  
+  <span class="comment"># initialize = constructeur = ce qui se passe quand on crée une catégorie</span>
+  <span class="keyword">def</span> initialize(name, description = <span class="string">""</span>)
+    @name = name                    <span class="comment"># @name = variable privée de l'objet</span>
+    @description = description      <span class="comment"># @description = variable privée de l'objet</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># UTILISATION :</span>
+<span class="comment"># category = Category.new("Électronique", "Smartphones, ordinateurs...")</span>
+<span class="comment"># puts category.name         # Affiche "Électronique"</span>
+<span class="comment"># puts category.description  # Affiche "Smartphones, ordinateurs..."</span>
+        </div>
+        <button class="run" onclick="runCategory()">Tester Category</button>
+        <div id="categoryOutput" class="output"></div>
+
+        <h2>🛍️ Article (Produit à vendre)</h2>
+        <div class="model">
+<span class="comment"># Créer une classe Article = créer un modèle de produit (comme "iPhone 15", "T-shirt Nike")</span>
+<span class="keyword">class</span> Article
+  <span class="comment"># attr_accessor = créer automatiquement les champs : titre, contenu, auteur, catégorie</span>
+  attr_accessor :title, :content, :author, :category
+  
+  <span class="comment"># initialize = constructeur = ce qui se passe quand on crée un produit</span>
+  <span class="keyword">def</span> initialize(title, content, author, category = <span class="keyword">nil</span>)
+    @title = title        <span class="comment"># @title = variable privée de l'objet</span>
+    @content = content    <span class="comment"># @content = variable privée de l'objet</span>
+    @author = author      <span class="comment"># @author = variable privée de l'objet (qui vend)</span>
+    @category = category  <span class="comment"># @category = variable privée de l'objet (dans quelle catégorie)</span>
+  <span class="keyword">end</span>
+  
+  <span class="comment"># summary = méthode qui retourne un résumé du produit</span>
+  <span class="keyword">def</span> summary
+    <span class="string">"#{@title} par #{@author.name}"</span>  <span class="comment"># Interpolation = mélanger texte et variables</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># UTILISATION :</span>
+<span class="comment"># article = Article.new("iPhone 15", "Nouveau smartphone", user, category)</span>
+<span class="comment"># puts article.title      # Affiche "iPhone 15"</span>
+<span class="comment"># puts article.summary    # Affiche "iPhone 15 par Alice"</span>
+        </div>
+        <button class="run" onclick="runArticle()">Tester Article</button>
+        <div id="articleOutput" class="output"></div>
+
+        <h2>🎯 Utilisation complète (Exemple concret)</h2>
+        <div class="model">
+<span class="comment"># ÉTAPE 1 : Créer un utilisateur (Alice s'inscrit sur le site)</span>
+user = User.new(<span class="string">"Alice"</span>, <span class="string">"alice@example.com"</span>, <span class="number">25</span>)
+
+<span class="comment"># ÉTAPE 2 : Créer une catégorie (le site a des catégories de produits)</span>
+category = Category.new(<span class="string">"Tech"</span>, <span class="string">"Articles tech"</span>)
+
+<span class="comment"># ÉTAPE 3 : Alice vend un produit (créer un article)</span>
+article = Article.new(<span class="string">"Ruby Guide"</span>, <span class="string">"Contenu..."</span>, user, category)
+
+<span class="comment"># ÉTAPE 4 : Utiliser les méthodes (afficher les informations)</span>
+puts article.summary                    <span class="comment"># Affiche "Ruby Guide par Alice"</span>
+puts <span class="string">"Majeur: #{user.adult?}"</span>        <span class="comment"># Affiche "Majeur: true"</span>
+puts <span class="string">"Catégorie: #{article.category.name}"</span>  <span class="comment"># Affiche "Catégorie: Tech"</span>
+
+<span class="comment"># RÉSULTAT : Alice (25 ans, majeure) vend un "Ruby Guide" dans la catégorie "Tech"</span>
+        </div>
+        <button class="run" onclick="runComplete()">Tester tout</button>
+        <div id="completeOutput" class="output"></div>
+    </div>
+
+    <script>
+        function runUser() {
+            const output = document.getElementById('userOutput');
+            output.innerHTML = `user = User.new("Alice", "alice@example.com", 25)
+user.name = "Alice"
+user.email = "alice@example.com" 
+user.age = 25
+user.adult? = true`;
+            output.style.display = 'block';
+        }
+
+        function runCategory() {
+            const output = document.getElementById('categoryOutput');
+            output.innerHTML = `category = Category.new("Tech", "Articles tech")
+category.name = "Tech"
+category.description = "Articles tech"`;
+            output.style.display = 'block';
+        }
+
+        function runArticle() {
+            const output = document.getElementById('articleOutput');
+            output.innerHTML = `article = Article.new("Ruby Guide", "Contenu...", user, category)
+article.title = "Ruby Guide"
+article.content = "Contenu..."
+article.summary = "Ruby Guide par Alice"`;
+            output.style.display = 'block';
+        }
+
+        function runComplete() {
+            const output = document.getElementById('completeOutput');
+            output.innerHTML = `user = User.new("Alice", "alice@example.com", 25)
+category = Category.new("Tech", "Articles tech")
+article = Article.new("Ruby Guide", "Contenu...", user, category)
+
+Ruby Guide par Alice
+Majeur: true
+Catégorie: Tech`;
+            output.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

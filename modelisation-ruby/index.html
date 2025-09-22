@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modélisation Ruby - Interface à Onglets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 1.5s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            color: #495057;
+            transition: all 0.8s ease;
+        }
+
+        .tab.active {
+            background: white;
+            color: #e74c3c;
+            border-bottom-color: #e74c3c;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            min-height: 500px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1.2s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .concept-section {
+            margin-bottom: 30px;
+        }
+
+        .concept-title {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-block .comment {
+            color: #68d391;
+        }
+
+        .code-block .keyword {
+            color: #f687b3;
+        }
+
+        .code-block .string {
+            color: #fbb6ce;
+        }
+
+        .code-block .number {
+            color: #fbd38d;
+        }
+
+        .explanation {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #e74c3c;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .example h4 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+
+        .kata-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .kata-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .run-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            transition: background 0.3s ease;
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                min-width: auto;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💎 Modélisation Ruby</h1>
+            <p>Apprenez Ruby de A à Z avec des exemples pratiques</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('basics')">Variables & Types</button>
+            <button class="tab" onclick="showTab('collections')">Collections</button>
+            <button class="tab" onclick="showTab('conditions')">Conditions & Boucles</button>
+            <button class="tab" onclick="showTab('classes')">Classes & Objets</button>
+            <button class="tab" onclick="showTab('modules')">Modules & Mixins</button>
+            <button class="tab" onclick="showTab('blocks')">Blocks & Itérateurs</button>
+            <button class="tab" onclick="showTab('idioms')">Ruby Idiomatique</button>
+            <button class="tab" onclick="showTab('katas')">Katas de Révision</button>
+        </div>
+
+        <!-- Onglet Variables & Types -->
+        <div id="basics" class="tab-content active">
+            <div class="concept-section">
+                <h2 class="concept-title">Variables, Constantes, Symboles vs Strings</h2>
+                
+                <div class="explanation">
+                    <h4>Variables locales (snake_case)</h4>
+                    <p>Les variables en Ruby utilisent la convention snake_case et sont typées dynamiquement.</p>
+                </div>
+
+                <div class="code-block">
+<span class="comment"># Variables locales (snake_case)</span>
+user_name = <span class="string">"Alice"</span>
+user_age = <span class="number">25</span>
+
+<span class="comment"># Constantes (MAJUSCULES)</span>
+MAX_ARTICLES = <span class="number">100</span>
+DEFAULT_CATEGORY = <span class="string">"Général"</span>
+
+<span class="comment"># Symboles vs Strings</span>
+<span class="comment"># Symboles : immuables, plus rapides, clés de hash</span>
+:name          <span class="comment"># Symbol (immuable)</span>
+<span class="string">"name"</span>         <span class="comment"># String (mutable)</span>
+                </div>
+
+                <div class="example">
+                    <h4>💡 Pourquoi utiliser des symboles ?</h4>
+                    <ul>
+                        <li><strong>Performance</strong> : Plus rapides que les strings</li>
+                        <li><strong>Mémoire</strong> : Une seule instance en mémoire</li>
+                        <li><strong>Clés de hash</strong> : Parfaites pour les clés</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Collections -->
+        <div id="collections" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Arrays, Hashes, Manipulation Collections</h2>
+                
+                <div class="code-block">
+<span class="comment"># Arrays</span>
+articles = [<span class="string">"Article 1"</span>, <span class="string">"Article 2"</span>, <span class="string">"Article 3"</span>]
+categories = %w[Tech Sport Politique]  <span class="comment"># Syntaxe courte pour array de strings</span>
+
+<span class="comment"># Hashes</span>
+user_data = {
+  name: <span class="string">"Alice"</span>,           <span class="comment"># Symbol comme clé (Ruby 1.9+)</span>
+  age: <span class="number">25</span>,
+  email: <span class="string">"alice@example.com"</span>
+}
+
+<span class="comment"># Manipulation collections</span>
+articles << <span class="string">"Article 4"</span>                    <span class="comment"># Ajouter élément</span>
+articles.push(<span class="string">"Article 5"</span>)                 <span class="comment"># Autre façon d'ajouter</span>
+articles.pop                               <span class="comment"># Retirer dernier élément</span>
+articles.first                             <span class="comment"># Premier élément</span>
+articles.last                              <span class="comment"># Dernier élément</span>
+articles.length                            <span class="comment"># Taille</span>
+articles.include?(<span class="string">"Article 1"</span>)             <span class="comment"># Contient ?</span>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Quand utiliser Array vs Hash ?</h4>
+                    <p><strong>Array</strong> : Ordre important, accès par index</p>
+                    <p><strong>Hash</strong> : Accès par clé, pas d'ordre garanti</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Conditions & Boucles -->
+        <div id="conditions" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Conditions et Boucles</h2>
+                
+                <div class="code-block">
+<span class="comment"># If/Unless</span>
+<span class="keyword">if</span> user_age >= <span class="number">18</span>
+  puts <span class="string">"Majeur"</span>
+<span class="keyword">end</span>
+
+<span class="keyword">unless</span> user_age < <span class="number">18</span>
+  puts <span class="string">"Majeur aussi"</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Case (plus lisible que if/elsif)</span>
+<span class="keyword">case</span> user_age
+<span class="keyword">when</span> <span class="number">0</span>..<span class="number">17</span>
+  puts <span class="string">"Mineur"</span>
+<span class="keyword">when</span> <span class="number">18</span>..<span class="number">65</span>
+  puts <span class="string">"Adulte"</span>
+<span class="keyword">else</span>
+  puts <span class="string">"Senior"</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Boucles avec collections</span>
+articles.each <span class="keyword">do</span> |article|
+  puts <span class="string">"Article: #{article}"</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Map (transformation)</span>
+article_lengths = articles.map { |article| article.length }
+
+<span class="comment"># Select (filtrage)</span>
+long_articles = articles.select { |article| article.length > <span class="number">10</span> }
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Classes & Objets -->
+        <div id="classes" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Classes et Objets</h2>
+                
+                <div class="code-block">
+<span class="comment"># Classe User</span>
+<span class="keyword">class</span> User
+  attr_accessor :name, :email, :age
+  attr_reader :id  <span class="comment"># Lecture seule</span>
+  
+  @@next_id = <span class="number">1</span>
+  
+  <span class="keyword">def</span> initialize(name, email, age)
+    @name = name
+    @email = email
+    @age = age
+    @id = @@next_id
+    @@next_id += <span class="number">1</span>
+  <span class="keyword">end</span>
+  
+  <span class="comment"># Méthode avec ?</span>
+  <span class="keyword">def</span> adult?
+    @age >= <span class="number">18</span>
+  <span class="keyword">end</span>
+  
+  <span class="comment"># Méthode avec !</span>
+  <span class="keyword">def</span> validate!
+    raise <span class="string">"Email invalide"</span> <span class="keyword">unless</span> @email.include?(<span class="string">"@"</span>)
+    raise <span class="string">"Nom requis"</span> <span class="keyword">if</span> @name.empty?
+    <span class="keyword">self</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+                </div>
+
+                <div class="example">
+                    <h4>🔧 Concepts clés</h4>
+                    <ul>
+                        <li><strong>attr_accessor</strong> : Génère getter/setter automatiquement</li>
+                        <li><strong>attr_reader</strong> : Lecture seule</li>
+                        <li><strong>@@variable</strong> : Variable de classe</li>
+                        <li><strong>?</strong> : Méthodes qui retournent true/false</li>
+                        <li><strong>!</strong> : Méthodes qui modifient l'objet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Modules & Mixins -->
+        <div id="modules" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Modules et Mixins</h2>
+                
+                <div class="code-block">
+<span class="comment"># Module pour partager du code</span>
+<span class="keyword">module</span> Publishable
+  <span class="keyword">def</span> publish
+    @published = <span class="keyword">true</span>
+    puts <span class="string">"#{self.class.name} publié !"</span>
+  <span class="keyword">end</span>
+  
+  <span class="keyword">def</span> published?
+    @published || <span class="keyword">false</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Classe Article avec héritage et modules</span>
+<span class="keyword">class</span> Article
+  include Publishable  <span class="comment"># Mixin du module</span>
+                    
+  attr_accessor :title, :content, :author, :category
+  attr_reader :created_at, :id
+  
+  @@next_id = <span class="number">1</span>
+  
+  <span class="keyword">def</span> initialize(title, content, author, category = <span class="keyword">nil</span>)
+    @title = title
+    @content = content
+    @author = author
+    @category = category
+    @created_at = Time.now
+    @id = @@next_id
+    @@next_id += <span class="number">1</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+                </div>
+
+                <div class="example">
+                    <h4>🎯 Avantages des modules</h4>
+                    <ul>
+                        <li><strong>Réutilisabilité</strong> : Code partagé entre classes</li>
+                        <li><strong>Organisation</strong> : Séparation des responsabilités</li>
+                        <li><strong>Mixins</strong> : Ajout de fonctionnalités</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Blocks & Itérateurs -->
+        <div id="blocks" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Blocks et Itérateurs</h2>
+                
+                <div class="code-block">
+<span class="comment"># Méthode personnalisée avec block</span>
+<span class="keyword">def</span> process_articles(articles, &block)
+  articles.each <span class="keyword">do</span> |article|
+    result = block.call(article) <span class="keyword">if</span> block_given?
+    puts <span class="string">"Traitement: #{article.title} -> #{result}"</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Méthode avec yield et block_given?</span>
+<span class="keyword">def</span> process_content(&block)
+  <span class="keyword">if</span> block_given?
+    yield(@content)
+  <span class="keyword">else</span>
+    @content
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Utilisation des blocks</span>
+process_articles([article]) <span class="keyword">do</span> |art|
+  art.title.upcase
+<span class="keyword">end</span>
+                </div>
+
+                <div class="example">
+                    <h4>💡 Concepts des blocks</h4>
+                    <ul>
+                        <li><strong>yield</strong> : Exécute le block passé</li>
+                        <li><strong>block_given?</strong> : Vérifie si un block est fourni</li>
+                        <li><strong>&block</strong> : Capture le block en paramètre</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Ruby Idiomatique -->
+        <div id="idioms" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Ruby Idiomatique</h2>
+                
+                <div class="code-block">
+<span class="comment"># Safe navigation operator</span>
+<span class="keyword">def</span> get_user_category_name(user)
+  user&.category&.name || <span class="string">"Pas de catégorie"</span>
+<span class="keyword">end</span>
+
+<span class="comment"># Méthodes avec ? (retournent true/false)</span>
+<span class="keyword">def</span> valid_email?(email)
+  email.include?(<span class="string">"@"</span>) && email.include?(<span class="string">"."</span>)
+<span class="keyword">end</span>
+
+<span class="comment"># Méthodes avec ! (modifient l'objet)</span>
+<span class="keyword">def</span> normalize_title!
+  @title = @title.strip.capitalize
+<span class="keyword">end</span>
+
+<span class="comment"># String interpolation vs concatenation</span>
+<span class="keyword">def</span> summary
+  <span class="comment"># Interpolation (recommandée)</span>
+  <span class="string">"#{@title} par #{@author.name} (#{@created_at.strftime('%d/%m/%Y')})"</span>
+  
+  <span class="comment"># Concatenation (moins lisible)</span>
+  <span class="comment"># @title + " par " + @author.name + " (" + @created_at.strftime('%d/%m/%Y') + ")"</span>
+<span class="keyword">end</span>
+                </div>
+
+                <div class="example">
+                    <h4>🎨 Bonnes pratiques Ruby</h4>
+                    <ul>
+                        <li><strong>&.</strong> : Safe navigation (évite les erreurs nil)</li>
+                        <li><strong>?</strong> : Convention pour les méthodes booléennes</li>
+                        <li><strong>!</strong> : Convention pour les méthodes destructives</li>
+                        <li><strong>#{} interpolation</strong> : Plus lisible que la concaténation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Katas de Révision -->
+        <div id="katas" class="tab-content">
+            <div class="concept-section">
+                <h2 class="concept-title">Katas de Révision</h2>
+                
+                <div class="kata-section">
+                    <h3>🏃‍♂️ Kata 1: Variables et Symboles</h3>
+                    <div class="code-block">
+name = <span class="string">"Bob"</span>
+age = <span class="number">30</span>
+status = :active
+puts <span class="string">"Nom: #{name}, Âge: #{age}, Statut: #{status}"</span>
+                    </div>
+                    <button class="run-button" onclick="runKata(1)">Exécuter</button>
+                    <div id="output1" class="output"></div>
+                </div>
+
+                <div class="kata-section">
+                    <h3>🏃‍♂️ Kata 2: Arrays et Manipulation</h3>
+                    <div class="code-block">
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+squares = numbers.map { |n| n * n }
+evens = numbers.select { |n| n.even? }
+puts <span class="string">"Carrés: #{squares}"</span>
+puts <span class="string">"Pairs: #{evens}"</span>
+                    </div>
+                    <button class="run-button" onclick="runKata(2)">Exécuter</button>
+                    <div id="output2" class="output"></div>
+                </div>
+
+                <div class="kata-section">
+                    <h3>🏃‍♂️ Kata 3: Hash et Accès</h3>
+                    <div class="code-block">
+person = { name: <span class="string">"Charlie"</span>, age: <span class="number">35</span>, city: <span class="string">"Paris"</span> }
+puts <span class="string">"Personne: #{person[:name]} a #{person[:age]} ans"</span>
+                    </div>
+                    <button class="run-button" onclick="runKata(3)">Exécuter</button>
+                    <div id="output3" class="output"></div>
+                </div>
+
+                <div class="kata-section">
+                    <h3>🏃‍♂️ Kata 4: Conditions Simples</h3>
+                    <div class="code-block">
+score = <span class="number">85</span>
+<span class="keyword">if</span> score >= <span class="number">80</span>
+  puts <span class="string">"Excellent !"</span>
+<span class="keyword">elsif</span> score >= <span class="number">60</span>
+  puts <span class="string">"Bien !"</span>
+<span class="keyword">else</span>
+  puts <span class="string">"À améliorer"</span>
+<span class="keyword">end</span>
+                    </div>
+                    <button class="run-button" onclick="runKata(4)">Exécuter</button>
+                    <div id="output4" class="output"></div>
+                </div>
+
+                <div class="kata-section">
+                    <h3>🏃‍♂️ Kata 5: Boucles et Collections</h3>
+                    <div class="code-block">
+fruits = %w[pomme banane orange]
+fruits.each_with_index <span class="keyword">do</span> |fruit, index|
+  puts <span class="string">"#{index + 1}. #{fruit}"</span>
+<span class="keyword">end</span>
+                    </div>
+                    <button class="run-button" onclick="runKata(5)">Exécuter</button>
+                    <div id="output5" class="output"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Masquer tous les contenus d'onglets
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Désactiver tous les onglets
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Afficher le contenu de l'onglet sélectionné
+            document.getElementById(tabName).classList.add('active');
+
+            // Activer l'onglet sélectionné
+            event.target.classList.add('active');
+        }
+
+        function runKata(kataNumber) {
+            const outputs = {
+                1: "Nom: Bob, Âge: 30, Statut: active",
+                2: "Carrés: [1, 4, 9, 16, 25]\nPairs: [2, 4]",
+                3: "Personne: Charlie a 35 ans",
+                4: "Excellent !",
+                5: "1. pomme\n2. banane\n3. orange"
+            };
+
+            const outputElement = document.getElementById(`output${kataNumber}`);
+            outputElement.textContent = outputs[kataNumber];
+            outputElement.style.display = 'block';
+        }
+
+        // Animation d'entrée
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.6s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+
